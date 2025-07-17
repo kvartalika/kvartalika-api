@@ -5,11 +5,7 @@ import com.asyncapi.kotlinasyncapi.ktor.AsyncApiPlugin
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.fasterxml.jackson.databind.*
-import com.ucasoft.ktor.simpleCache.SimpleCache
-import com.ucasoft.ktor.simpleCache.cacheOutput
-import com.ucasoft.ktor.simpleMemoryCache.*
 import io.ktor.http.*
-import io.ktor.serialization.jackson.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -20,9 +16,7 @@ import io.ktor.server.plugins.calllogging.*
 import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
-import io.ktor.server.plugins.csrf.*
 import io.ktor.server.plugins.defaultheaders.*
-import io.ktor.server.plugins.httpsredirect.*
 import io.ktor.server.plugins.openapi.*
 import io.ktor.server.plugins.requestvalidation.RequestValidation
 import io.ktor.server.plugins.requestvalidation.ValidationResult
@@ -79,16 +73,7 @@ fun Application.configureSecurity() {
             }
         }
     }
-    install(CSRF) {
-        // tests Origin is an expected value
-        allowOrigin("http://localhost:8080")
 
-        // tests Origin matches Host header
-        originMatchesHost()
-
-        // custom header checks
-        checkHeader("X-CSRF-Token")
-    }
     install(Sessions) {
         cookie<MySession>("MY_SESSION") {
             cookie.extensions["SameSite"] = "lax"

@@ -1,5 +1,6 @@
 package kvartalica
 
+import com.example.routes.configureRouting
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
@@ -11,6 +12,5 @@ fun Application.module() {
     configureSecurity()
     configureSerialization()
     configureMonitoring()
-    configureDatabases()
     configureRouting()
 }
