@@ -1,98 +1,658 @@
 openapi: 3.0.3
 info:
-  title: Russian Backend API
-  description: API for Russian language learning backend
-  version: 1.0.0
+  title: Kvartalica API
+  version: 1.1.0
 servers:
   - url: http://localhost:8080
-    description: Development server
-
 paths:
-  /:
-    get:
-      summary: Hello World endpoint
-      responses:
-        '200':
-          description: Success response
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "Hello World!"
-
-  /health:
-    get:
-      summary: Health check endpoint
-      responses:
-        '200':
-          description: Server health status
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "OK - Server is healthy"
-
-  /cities:
-    get:
-      summary: Get all cities
-      responses:
-        '200':
-          description: List of cities
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/City'
+  /requests:
     post:
-      summary: Create a new city
+      summary: Создать заявку
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/City'
+              $ref: '#/components/schemas/RequestCreate'
       responses:
         '201':
-          description: City created successfully
+          description: Заявка создана
           content:
             application/json:
               schema:
-                type: integer
-                description: ID of the created city
+                type: object
+                properties:
+                  id:
+                    type: integer
+        '400':
+          description: Некорректные данные
+  /admin/login:
+    post:
+      summary: Вход администратора
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Успешный вход
+        '401':
+          description: Неверные учётные данные
 
-  /cities/{id}:
+  /admin/register:
+    post:
+      summary: Регистрация администратора
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Админ создан
+        '409':
+          description: Уже существует
+
+  /admin/setup:
+    post:
+      summary: Первичная настройка администратора
+      responses:
+        '201':
+          description: Админ создан
+        '409':
+          description: Уже существует
+
+  /content-manager/login:
+    post:
+      summary: Вход контент-менеджера
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Успешный вход
+        '401':
+          description: Неверные учётные данные
+
+  /content-manager/register:
+    post:
+      summary: Регистрация контент-менеджера
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Контент-менеджер создан
+        '409':
+          description: Уже существует
+
+  /categories:
     get:
-      summary: Get city by ID
+      summary: Получить список категорий
+      responses:
+        '200':
+          description: OK
+
+  /homes:
+    get:
+      summary: Получить список домов
+      responses:
+        '200':
+          description: OK
+
+  /flats:
+    get:
+      summary: Получить список квартир
+      responses:
+        '200':
+          description: OK
+
+  /search:
+    post:
+      summary: Поиск домов
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: OK
+
+  /photos:
+    get:
+      summary: Получить список фото
+      responses:
+        '200':
+          description: OK
+
+  /descriptions:
+    get:
+      summary: Получить список описаний
+      responses:
+        '200':
+          description: OK
+
+  /footer:
+    get:
+      summary: Получить футер
+      responses:
+        '200':
+          description: OK
+
+  /content/flats:
+    post:
+      summary: Создать квартиру
+      security:
+        - content_jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlatRequest'
+      responses:
+        '201':
+          description: Квартира создана
+    put:
+      summary: Обновить квартиру
+      security:
+        - content_jwt: []
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlatRequest'
+      responses:
+        '200':
+          description: Обновлено
+        '404':
+          description: Не найдено
+    delete:
+      summary: Удалить квартиру
+      security:
+        - content_jwt: []
+      parameters:
+        - in: path
+          name: id
           required: true
           schema:
             type: integer
       responses:
         '200':
-          description: City details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/City'
+          description: Удалено
         '404':
-          description: City not found
+          description: Не найдено
+
+  /content/homes:
+    post:
+      summary: Создать дом
+      security:
+        - content_jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HomeRequest'
+      responses:
+        '201':
+          description: Дом создан
+    put:
+      summary: Обновить дом
+      security:
+        - content_jwt: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HomeRequest'
+      responses:
+        '200':
+          description: Обновлено
+        '404':
+          description: Не найдено
+    delete:
+      summary: Удалить дом
+      security:
+        - content_jwt: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Удалено
+        '404':
+          description: Не найдено
+
+  /content/photos:
+    post:
+      summary: Создать фото
+      security:
+        - content_jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhotoRequest'
+      responses:
+        '201':
+          description: Фото создано
+    put:
+      summary: Обновить фото
+      security:
+        - content_jwt: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhotoRequest'
+      responses:
+        '200':
+          description: Обновлено
+        '404':
+          description: Не найдено
+    delete:
+      summary: Удалить фото
+      security:
+        - content_jwt: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Удалено
+        '404':
+          description: Не найдено
+
+  /content/descriptions:
+    post:
+      summary: Создать описание
+      security:
+        - content_jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DescriptionRequest'
+      responses:
+        '201':
+          description: Описание создано
+    put:
+      summary: Обновить описание
+      security:
+        - content_jwt: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DescriptionRequest'
+      responses:
+        '200':
+          description: Обновлено
+        '404':
+          description: Не найдено
+    delete:
+      summary: Удалить описание
+      security:
+        - content_jwt: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Удалено
+        '404':
+          description: Не найдено
+
+  /content/categories:
+    post:
+      summary: Создать категорию
+      security:
+        - content_jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryRequest'
+      responses:
+        '201':
+          description: Категория создана
+    put:
+      summary: Обновить категорию
+      security:
+        - content_jwt: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryRequest'
+      responses:
+        '200':
+          description: Обновлено
+        '404':
+          description: Не найдено
+    delete:
+      summary: Удалить категорию
+      security:
+        - content_jwt: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Удалено
+        '404':
+          description: Не найдено
+
+  /content/footer:
+    post:
+      summary: Создать футер
+      security:
+        - content_jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FooterRequest'
+      responses:
+        '201':
+          description: Футер создан
+    put:
+      summary: Обновить футер
+      security:
+        - content_jwt: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FooterRequest'
+      responses:
+        '200':
+          description: Обновлено
+        '404':
+          description: Не найдено
+
+  /admin/content-managers:
+    get:
+      summary: Получить всех контент-менеджеров
+      security:
+        - admin_jwt: []
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Создать контент-менеджера
+      security:
+        - admin_jwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentManagerRequest'
+      responses:
+        '201':
+          description: Контент-менеджер создан
+        '409':
+          description: Уже существует
+    put:
+      summary: Обновить контент-менеджера
+      security:
+        - admin_jwt: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentManagerRequest'
+      responses:
+        '200':
+          description: Обновлено
+        '404':
+          description: Не найдено
+    delete:
+      summary: Удалить контент-менеджера
+      security:
+        - admin_jwt: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Удалено
+        '404':
+          description: Не найдено
 
 components:
+  securitySchemes:
+    content_jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    admin_jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
-    City:
+    LoginRequest:
       type: object
-      required:
-        - name
-        - population
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required: [email, password]
+
+    RegisterRequest:
+      type: object
       properties:
         name:
           type: string
-          description: Name of the city
-          example: "Moscow"
-        population:
+        surname:
+          type: string
+        patronymic:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        password:
+          type: string
+      required: [name, surname, email, password]
+
+    ContentManagerRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        patronymic:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        password:
+          type: string
+      required: [name, surname, email, password]
+
+    CategoryRequest:
+      type: object
+      properties:
+        categoryName:
+          type: string
+      required: [categoryName]
+
+    HomeRequest:
+      type: object
+      properties:
+        categoryId:
           type: integer
-          description: Population of the city
-          example: 12506468
+        homeAddress:
+          type: string
+        yearBuilt:
+          type: integer
+        totalFloors:
+          type: integer
+        ownerId:
+          type: string
+      required: [categoryId]
+
+    FlatRequest:
+      type: object
+      properties:
+        homeId:
+          type: integer
+        flatName:
+          type: string
+        flatValue:
+          type: number
+        amountOfRooms:
+          type: integer
+        flatFloor:
+          type: integer
+        placementOfFlat:
+          type: string
+        amountOfBathrooms:
+          type: integer
+        isDecorated:
+          type: boolean
+        area:
+          type: string
+      required: [homeId]
+
+    PhotoRequest:
+      type: object
+      properties:
+        altText:
+          type: string
+
+    DescriptionRequest:
+      type: object
+      properties:
+        descriptionText:
+          type: string
+      required: [descriptionText]
+
+    FooterRequest:
+      type: object
+      properties:
+        companyName:
+          type: string
+        placementOfSelling:
+          type: string
+        companyPhone:
+          type: string
+        companyEmail:
+          type: string
+        socialLinks:
+          type: string
+      required: [companyName]
+
+    SearchRequest:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+        minValue:
+          type: number
+        maxValue:
+          type: number
+        minRooms:
+          type: integer
+        maxRooms:
+          type: integer
+
+
+    RequestCreate:
+        type: object
+        properties:
+          name:
+            type: string
+          surname:
+            type: string
+          email:
+            type: string
+          phone:
+            type: string
+        required: [ name, surname, email, phone ]

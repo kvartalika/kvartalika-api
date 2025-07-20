@@ -1,16 +1,20 @@
-package kvartalica
+package com.kvartalica
 
-import com.example.routes.configureRouting
+import com.kvartalica.config.*
 import io.ktor.server.application.*
+import io.ktor.server.netty.EngineMain
+import io.ktor.server.routing.*
 
 fun main(args: Array<String>) {
-    io.ktor.server.netty.EngineMain.main(args)
+    EngineMain.main(args)
 }
 
 fun Application.module() {
     configureHTTP()
     configureSecurity()
     configureSerialization()
+    configureDatabase()
     configureMonitoring()
     configureRouting()
 }
+

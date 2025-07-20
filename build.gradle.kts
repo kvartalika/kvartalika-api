@@ -10,7 +10,7 @@ plugins {
 
 }
 
-group = "kvartalica"
+group = "com.kvartalica"
 version = "0.0.1"
 
 application {
@@ -57,5 +57,6 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:3.2.1")
     implementation("io.ktor:ktor-serialization-jackson:3.2.1")
     testImplementation("io.ktor:ktor-server-test-host")
+    implementation("org.mindrot:jbcrypt:0.4")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
