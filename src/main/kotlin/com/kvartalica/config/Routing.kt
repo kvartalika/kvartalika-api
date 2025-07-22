@@ -1,6 +1,9 @@
 package com.kvartalica.config
 
 import io.ktor.http.*
+import io.ktor.http.content.PartData
+import io.ktor.http.content.forEachPart
+import io.ktor.http.content.streamProvider
 import io.ktor.server.application.Application
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
@@ -15,6 +18,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.selectAll
 import java.time.Instant
 import java.util.UUID
+import kotlin.text.get
 import kotlin.text.insert
 import kotlin.text.set
 
@@ -210,7 +214,7 @@ fun Application.configureRouting() {
             }
         }
 
-        // CLIENT эндпоинты (остаются без изменений)
+        // CLIENT эндпоинты
         get("/categories") {
             val categories = transaction {
                 Categories.selectAll().map { row ->
@@ -286,7 +290,10 @@ fun Application.configureRouting() {
                 Photos.selectAll().map { row ->
                     mapOf(
                         "id" to row[Photos.id],
-                        "altText" to row[Photos.altText]
+                        "altText" to row[Photos.altText],
+                        "image" to row[Photos.photo]?.let {
+                            java.util.Base64.getEncoder().encodeToString(it)
+                        }
                     )
                 }
             }
@@ -456,10 +463,32 @@ fun Application.configureRouting() {
                 // CRUD photos
                 route("/photos") {
                     post {
-                        val request = call.receive<PhotoRequest>()
+                        val multipart = call.receiveMultipart()
+                        var altText: String? = null
+                        var photoBytes: ByteArray? = null
+
+                        multipart.forEachPart { part ->
+                            when (part) {
+                                is PartData.FormItem -> {
+                                    if (part.name == "altText") altText = part.value
+                                }
+                                is PartData.FileItem -> {
+                                    if (part.name == "photo") photoBytes = part.streamProvider().readBytes()
+                                }
+                                else -> {}
+                            }
+                            part.dispose()
+                        }
+
+                        if (photoBytes == null) {
+                            call.respond(HttpStatusCode.BadRequest, "Photo file is required")
+                            return@post
+                        }
+
                         val newId = transaction {
                             Photos.insert {
-                                it[Photos.altText] = request.altText
+                                it[Photos.photo] = photoBytes
+                                it[Photos.altText] = altText
                                 it[Photos.createdAt] = Instant.now()
                                 it[Photos.updatedAt] = Instant.now()
                             }[Photos.id]
@@ -474,10 +503,27 @@ fun Application.configureRouting() {
                             return@put
                         }
 
-                        val request = call.receive<PhotoRequest>()
+                        val multipart = call.receiveMultipart()
+                        var altText: String? = null
+                        var photoBytes: ByteArray? = null
+
+                        multipart.forEachPart { part ->
+                            when (part) {
+                                is PartData.FormItem -> {
+                                    if (part.name == "altText") altText = part.value
+                                }
+                                is PartData.FileItem -> {
+                                    if (part.name == "photo") photoBytes = part.streamProvider().readBytes()
+                                }
+                                else -> {}
+                            }
+                            part.dispose()
+                        }
+
                         val updated = transaction {
                             Photos.update({ Photos.id eq id }) {
-                                it[Photos.altText] = request.altText
+                                if (photoBytes != null) it[Photos.photo] = photoBytes
+                                it[Photos.altText] = altText
                                 it[Photos.updatedAt] = Instant.now()
                             }
                         }
