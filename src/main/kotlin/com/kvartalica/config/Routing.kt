@@ -1,10 +1,8 @@
 package com.kvartalica.config
 
 import io.ktor.http.*
-import io.ktor.http.content.PartData
-import io.ktor.http.content.forEachPart
-import io.ktor.http.content.streamProvider
-import io.ktor.server.application.Application
+import io.ktor.http.content.*
+import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -12,15 +10,11 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.mindrot.jbcrypt.BCrypt
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.selectAll
 import java.time.Instant
-import java.util.UUID
-import kotlin.text.get
-import kotlin.text.insert
-import kotlin.text.set
+import java.util.*
 
 @Serializable
 data class LoginRequest(val email: String, val password: String)
@@ -208,7 +202,10 @@ fun Application.configureRouting() {
                         it[Users.updatedAt] = Instant.now()
                     }[Users.id]
                 }
-                call.respond(HttpStatusCode.Created, mapOf("message" to "Content manager created", "id" to managerId.toString()))
+                call.respond(
+                    HttpStatusCode.Created,
+                    mapOf("message" to "Content manager created", "id" to managerId.toString())
+                )
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, "Content manager already exists")
             }
@@ -472,9 +469,11 @@ fun Application.configureRouting() {
                                 is PartData.FormItem -> {
                                     if (part.name == "altText") altText = part.value
                                 }
+
                                 is PartData.FileItem -> {
                                     if (part.name == "photo") photoBytes = part.streamProvider().readBytes()
                                 }
+
                                 else -> {}
                             }
                             part.dispose()
@@ -512,9 +511,11 @@ fun Application.configureRouting() {
                                 is PartData.FormItem -> {
                                     if (part.name == "altText") altText = part.value
                                 }
+
                                 is PartData.FileItem -> {
                                     if (part.name == "photo") photoBytes = part.streamProvider().readBytes()
                                 }
+
                                 else -> {}
                             }
                             part.dispose()

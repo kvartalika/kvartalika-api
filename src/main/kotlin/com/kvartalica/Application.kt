@@ -2,8 +2,7 @@ package com.kvartalica
 
 import com.kvartalica.config.*
 import io.ktor.server.application.*
-import io.ktor.server.netty.EngineMain
-import io.ktor.server.routing.*
+import io.ktor.server.netty.*
 
 fun main(args: Array<String>) {
     EngineMain.main(args)

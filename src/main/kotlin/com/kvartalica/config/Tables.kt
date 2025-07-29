@@ -42,7 +42,7 @@ object Footer : Table() {
     val placementOfSelling = varchar("placement_of_selling", 255).nullable()
     val companyPhone = varchar("company_phone", 20).nullable()
     val companyEmail = varchar("company_email", 100).nullable()
-    val socialLinks = text("social_links").nullable() // JSONB как текст
+    val socialLinks = text("social_links").nullable()
     override val primaryKey = PrimaryKey(id)
 }
 

@@ -2,10 +2,10 @@ package com.kvartalica.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import io.ktor.server.application.*
 
 fun Application.configureDatabase() {
     val dbConfig = environment.config.config("postgres")
