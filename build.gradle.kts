@@ -59,4 +59,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host")
     implementation("org.mindrot:jbcrypt:0.4")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+
+    // Env
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 }

@@ -1,5 +1,7 @@
 package com.kvartalica.config
 
+import com.kvartalica.dto.*
+import com.kvartalica.models.*
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
@@ -7,7 +9,6 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -15,86 +16,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.mindrot.jbcrypt.BCrypt
 import java.time.Instant
 import java.util.*
-
-@Serializable
-data class LoginRequest(val email: String, val password: String)
-
-@Serializable
-data class RegisterRequest(
-    val name: String,
-    val surname: String,
-    val patronymic: String? = null,
-    val email: String,
-    val phone: String? = null,
-    val password: String
-)
-
-@Serializable
-data class ContentManagerRequest(
-    val name: String,
-    val surname: String,
-    val patronymic: String? = null,
-    val email: String,
-    val phone: String? = null,
-    val password: String
-)
-
-@Serializable
-data class CategoryRequest(val categoryName: String)
-
-@Serializable
-data class HomeRequest(
-    val categoryId: Int,
-    val homeAddress: String? = null,
-    val yearBuilt: Int? = null,
-    val totalFloors: Int? = null,
-    val ownerId: String? = null // Изменено на String для UUID
-)
-
-@Serializable
-data class FlatRequest(
-    val homeId: Int,
-    val flatName: String? = null,
-    val flatValue: Double? = null,
-    val amountOfRooms: Int? = null,
-    val flatFloor: Int? = null,
-    val placementOfFlat: String? = null,
-    val amountOfBathrooms: Int = 1,
-    val isDecorated: Boolean = false,
-    val area: String? = null
-)
-
-@Serializable
-data class PhotoRequest(val altText: String? = null)
-
-@Serializable
-data class DescriptionRequest(val descriptionText: String)
-
-@Serializable
-data class FooterRequest(
-    val companyName: String,
-    val placementOfSelling: String? = null,
-    val companyPhone: String? = null,
-    val companyEmail: String? = null,
-    val socialLinks: String? = null
-)
-
-@Serializable
-data class SearchRequest(
-    val categoryId: Int? = null,
-    val minValue: Double? = null,
-    val maxValue: Double? = null,
-    val minRooms: Int? = null,
-    val maxRooms: Int? = null
-)
-
-@Serializable
-data class RequestCreate(
-    val name: String,
-    val surname: String,
-    val email: String,
-    val phone: String
-)
 
 object Requests : IntIdTable("bids") {
     val name = varchar("name", 100)
