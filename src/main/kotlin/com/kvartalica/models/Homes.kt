@@ -1,16 +1,29 @@
 package com.kvartalica.models
 
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.javatime.datetime
+import java.time.LocalDateTime
 
-object Homes : Table() {
-    val id = integer("id").autoIncrement()
-    val categoryId = integer("category_id") references Categories.id
-    val homeAddress = varchar("home_address", 255).nullable()
-    val yearBuilt = integer("year_built").nullable()
-    val totalFloors = integer("total_floors").nullable()
+object Homes : IntIdTable() {
+    val name = varchar("name", 255).nullable()
+    val description = text("description").nullable()
+    val image = varchar("image", 512).nullable()
+    val address = varchar("address", 512).nullable()
+    val latitude = decimal("latitude", 9, 6).nullable()
+    val longitude = decimal("longitude", 9, 6).nullable()
+    val yearBuilt = integer("yearBuilt").nullable()
+    val history = text("history").nullable()
+    val historyImages = text("historyImages").nullable()
+    val features = text("features").nullable()
+    val about = varchar("about", 512).nullable()
+    val numberOfFloors = integer("numberOfFloors").nullable()
+    val storesNearby = bool("storesNearby").default(false)
+    val schoolsNearby = bool("schoolsNearby").default(false)
+    val hospitalsNearby = bool("hospitalsNearby").default(false)
+    val hasYards = bool("hasYards").default(false)
+    val yardsImages = text("yardsImages").nullable()
+    val published = bool("published").default(false)
     val ownerId = integer("owner_id").nullable()
-    val createdAt = timestamp("created_at")
-    val updatedAt = timestamp("updated_at")
-    override val primaryKey = PrimaryKey(id)
+    val createdAt = datetime("created_at").clientDefault { LocalDateTime.now() }.nullable()
+    val updatedAt = datetime("updated_at").clientDefault { LocalDateTime.now() }.nullable()
 }

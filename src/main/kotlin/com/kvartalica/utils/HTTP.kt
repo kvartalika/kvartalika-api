@@ -1,4 +1,4 @@
-package com.kvartalica.config
+package com.kvartalica.utils
 
 import io.ktor.http.*
 import io.ktor.server.application.*

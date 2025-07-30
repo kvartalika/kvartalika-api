@@ -1,13 +1,6 @@
 package com.kvartalica.config
 
-import com.kvartalica.models.Bids
-import com.kvartalica.models.Categories
-import com.kvartalica.models.Descriptions
-import com.kvartalica.models.Flats
-import com.kvartalica.models.Footer
-import com.kvartalica.models.Homes
-import com.kvartalica.models.Photos
-import com.kvartalica.models.Users
+import com.kvartalica.models.*
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.github.cdimascio.dotenv.dotenv
@@ -34,7 +27,8 @@ fun Application.configureDatabase() {
 
     Database.connect(dataSource)
     transaction {
-        SchemaUtils.create(Categories, Homes, Flats, Footer, Users, Photos, Descriptions, Bids)
+//        exec("CREATE SCHEMA public;")
+        SchemaUtils.create(Bids, Categories, FlatCategories, Flats, Homes, PageInfo, SocialMedia, Users)
     }
     try {
         transaction {

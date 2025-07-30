@@ -1,4 +1,4 @@
-package com.kvartalica.config
+package com.kvartalica.utils
 
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -7,11 +7,12 @@ import kotlinx.serialization.json.Json
 
 fun Application.configureSerialization() {
     install(ContentNegotiation) {
-        json(Json {
-            prettyPrint = true
-            isLenient = true
-            ignoreUnknownKeys = true
-            encodeDefaults = true
-        })
+        json(
+            Json {
+                prettyPrint = true
+                isLenient = true
+                ignoreUnknownKeys = true
+                encodeDefaults = true
+            })
     }
 }

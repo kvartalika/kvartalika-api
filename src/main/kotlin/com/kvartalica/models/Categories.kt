@@ -1,9 +1,8 @@
 package com.kvartalica.models
 
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.dao.id.IntIdTable
 
-object Categories : Table() {
-    val id = integer("category_id").autoIncrement()
-    val categoryName = varchar("category_name", 255)
-    override val primaryKey = PrimaryKey(id)
+object Categories : IntIdTable() {
+    val name = varchar("name", 255)
+    val isOnMainPage = bool("is_on_main_page").default(false)
 }

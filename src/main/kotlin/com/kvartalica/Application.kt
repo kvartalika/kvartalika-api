@@ -1,6 +1,9 @@
 package com.kvartalica
 
 import com.kvartalica.config.*
+import com.kvartalica.utils.configureHTTP
+import com.kvartalica.utils.configureMonitoring
+import com.kvartalica.utils.configureSerialization
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
 
