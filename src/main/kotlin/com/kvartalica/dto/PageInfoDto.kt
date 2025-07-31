@@ -1,6 +1,5 @@
 package com.kvartalica.dto
 
-import com.kvartalica.models.SocialMedia
 import kotlinx.serialization.Serializable
 
 @Serializable

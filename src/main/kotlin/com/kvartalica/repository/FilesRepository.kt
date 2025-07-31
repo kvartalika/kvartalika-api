@@ -1,5 +1,4 @@
 package com.kvartalica.repository
 
-object UserRepository {
-
+object FilesRepository {
 }

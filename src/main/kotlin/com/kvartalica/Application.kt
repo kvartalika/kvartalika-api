@@ -1,6 +1,8 @@
 package com.kvartalica
 
-import com.kvartalica.config.*
+import com.kvartalica.config.configureDatabase
+import com.kvartalica.config.configureRouting
+import com.kvartalica.config.configureSecurity
 import com.kvartalica.utils.configureHTTP
 import com.kvartalica.utils.configureMonitoring
 import com.kvartalica.utils.configureSerialization

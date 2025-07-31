@@ -3,9 +3,8 @@ package com.kvartalica.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RequestCreate(
+data class CategoryDto(
+    val id: Int = 0,
     val name: String,
-    val surname: String,
-    val email: String,
-    val phone: String
+    val isOnMainPage: Boolean = false,
 )
