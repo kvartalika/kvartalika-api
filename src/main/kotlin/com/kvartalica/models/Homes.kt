@@ -1,8 +1,6 @@
 package com.kvartalica.models
 
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.javatime.datetime
-import java.time.LocalDateTime
 
 object Homes : IntIdTable() {
     val name = varchar("name", 255).nullable()
@@ -23,7 +21,4 @@ object Homes : IntIdTable() {
     val hasYards = bool("hasYards").default(false)
     val yardsImages = text("yardsImages").nullable()
     val published = bool("published").default(false)
-    val ownerId = integer("owner_id").nullable()
-    val createdAt = datetime("created_at").clientDefault { LocalDateTime.now() }.nullable()
-    val updatedAt = datetime("updated_at").clientDefault { LocalDateTime.now() }.nullable()
 }

@@ -1,7 +1,7 @@
 package com.kvartalica.routes
 
 import com.kvartalica.dto.LoginRequest
-import com.kvartalica.dto.RegisterRequest
+import com.kvartalica.dto.UserDto
 import com.kvartalica.models.UserRole
 import com.kvartalica.models.Users
 import com.kvartalica.utils.JwtConfig
@@ -23,23 +23,30 @@ fun Route.contentManagerRoutes() {
                 .where { (Users.email eq request.email) and (Users.role eq UserRole.CONTENT_MANAGER.name) }
                 .singleOrNull()
         }
-
-        if (contentManager != null && BCrypt.checkpw(request.password, contentManager[Users.password] ?: "")) {
-            val token = JwtConfig.generateToken(
-                contentManager[Users.id].value.toString(),
-                contentManager[Users.email],
-                UserRole.CONTENT_MANAGER
+        if (contentManager != null && BCrypt.checkpw(request.password, contentManager[Users.password])) {
+            val accessToken = JwtConfig.generateAccessToken(
+                userId = contentManager[Users.id].toString(),
+                username = contentManager[Users.name],
+                role = UserRole.ADMIN
             )
-            call.respond(mapOf("token" to token, "role" to contentManager[Users.role]))
+            val refreshToken = JwtConfig.generateRefreshToken(
+                userId = contentManager[Users.id].toString()
+            )
+            call.respond(
+                mapOf(
+                    "accessToken" to accessToken,
+                    "refreshToken" to refreshToken,
+                    "role" to contentManager[Users.role]
+                )
+            )
         } else {
             call.respond(HttpStatusCode.Unauthorized, "Invalid content manager credentials")
         }
     }
 
     post("/content-manager/register") {
-        val request = call.receive<RegisterRequest>()
+        val request = call.receive<UserDto>()
         val hashedPassword = BCrypt.hashpw(request.password, BCrypt.gensalt())
-
         try {
             val managerId = transaction {
                 Users.insert {
@@ -50,11 +57,15 @@ fun Route.contentManagerRoutes() {
                     it[Users.phone] = request.phone
                     it[Users.password] = hashedPassword
                     it[Users.role] = UserRole.CONTENT_MANAGER.name
+                    it[Users.telegramId] = request.telegramId
                 }[Users.id]
             }
             call.respond(
                 HttpStatusCode.Created,
-                mapOf("message" to "Content manager created", "id" to managerId.toString())
+                mapOf(
+                    "message" to "Content manager created",
+                    "id" to managerId.toString()
+                )
             )
         } catch (e: Exception) {
             call.respond(HttpStatusCode.Conflict, "Content manager already exists")

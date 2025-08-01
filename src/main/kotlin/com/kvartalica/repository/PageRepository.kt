@@ -5,6 +5,7 @@ import com.kvartalica.dto.SocialMediaDto
 import com.kvartalica.models.PageInfo
 import com.kvartalica.models.SocialMedia
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
@@ -13,7 +14,7 @@ import org.jetbrains.exposed.sql.update
 
 object PageRepository {
     fun getPageInfo(): PageInfoDto {
-        val pageInfo = transaction {
+         val pageInfo = transaction {
             PageInfo
                 .selectAll()
                 .limit(1)
@@ -97,11 +98,14 @@ object PageRepository {
         }
     }
 
-    fun updateSocialMedia(socialMediaDto: SocialMediaDto) {
+    fun updateSocialMedia(socialMediaDto: List<SocialMediaDto>) {
         transaction {
-            val updatedRows = SocialMedia.update({ SocialMedia.id eq socialMediaDto.id }) {
-                it[image] = socialMediaDto.image
-                it[link] = socialMediaDto.link
+            SocialMedia.deleteAll()
+            socialMediaDto.forEach { sm ->
+                SocialMedia.insert {
+                    it[image] = sm.image
+                    it[link] = sm.link
+                }
             }
         }
     }

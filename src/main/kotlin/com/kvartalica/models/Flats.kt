@@ -16,10 +16,9 @@ object Flats : IntIdTable() {
     val area = decimal("area", precision = 10, scale = 2).nullable()
     val about = varchar("about", length = 1_000).nullable()
     val floor = integer("floor").nullable()
-    val categoryId = integer("categoryId").nullable()
     val homeId = integer("homeId").nullable()
     val numberOfBathrooms = integer("numberOfBathrooms").nullable()
-    val hasDecoration = bool("hasDecoration").nullable()
+    val hasDecoration = bool("hasDecoration").default(false)
     val numberForSale = integer("numberForSale").nullable()
     val published = bool("published").default(false)
 }

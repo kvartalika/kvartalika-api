@@ -1,4 +1,4 @@
-package com.kvartalica.utils
+package com.kvartalica.config
 
 import io.ktor.server.application.*
 import io.ktor.server.plugins.calllogging.*

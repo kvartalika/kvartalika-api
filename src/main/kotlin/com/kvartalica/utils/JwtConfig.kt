@@ -12,17 +12,27 @@ object JwtConfig {
 
     private val SECRET = env["SECRET"]
     private val ISSUER = env["ISSUER"]
-    private val VALIDITY_IN_MS = env["VALIDITY_IN_MS"].toLongOrNull() ?: 36_000_000
+    private const val ACCESS_VALIDITY_MS = (15 * 60 * 1000)
+    private const val REFRESH_VALIDITY_MS = (7 * 24 * 60 * 60 * 1000)
 
     private val algorithm = Algorithm.HMAC256(SECRET)
 
-    fun generateToken(userId: String, username: String, role: UserRole): String {
+    fun generateAccessToken(userId: String, username: String, role: UserRole): String {
         return JWT.create()
             .withIssuer(ISSUER)
             .withSubject(userId)
             .withClaim("username", username)
             .withClaim("role", role.name)
-            .withExpiresAt(Date(System.currentTimeMillis() + VALIDITY_IN_MS))
+            .withExpiresAt(Date(System.currentTimeMillis() + ACCESS_VALIDITY_MS))
+            .sign(algorithm)
+    }
+
+    fun generateRefreshToken(userId: String): String {
+        return JWT.create()
+            .withIssuer(ISSUER)
+            .withSubject(userId)
+            .withClaim("type", "refresh")
+            .withExpiresAt(Date(System.currentTimeMillis() + REFRESH_VALIDITY_MS))
             .sign(algorithm)
     }
 

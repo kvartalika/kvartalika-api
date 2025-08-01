@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FlatCategoryDto(
     val flat: FlatDto,
-    val category: CategoryDto? = null,
+    val categories: List<CategoryDto> = emptyList(),
 )

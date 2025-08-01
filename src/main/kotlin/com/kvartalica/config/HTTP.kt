@@ -1,4 +1,4 @@
-package com.kvartalica.utils
+package com.kvartalica.config
 
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -11,17 +11,18 @@ import io.ktor.server.routing.*
 
 fun Application.configureHTTP() {
     install(CORS) {
+        anyHost()
+        allowCredentials = true
         allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Get)
+        allowMethod(HttpMethod.Post)
         allowMethod(HttpMethod.Put)
         allowMethod(HttpMethod.Delete)
         allowMethod(HttpMethod.Patch)
-        allowHeader(HttpHeaders.Authorization)
-        allowHeader("MyCustomHeader")
 
-        allowHost("localhost:8080")
-        allowHost("127.0.0.1:8080")
-        allowHost("0.0.0.0:8080")
-        allowCredentials = true
+        allowHeader(HttpHeaders.Authorization)
+        allowHeader(HttpHeaders.ContentType)
+        allowHeader("MyCustomHeader")
     }
 
     install(DefaultHeaders) {

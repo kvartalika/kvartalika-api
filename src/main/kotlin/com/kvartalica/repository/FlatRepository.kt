@@ -3,91 +3,50 @@ package com.kvartalica.repository
 import com.kvartalica.dto.CategoryDto
 import com.kvartalica.dto.FlatCategoryDto
 import com.kvartalica.dto.FlatDto
+import com.kvartalica.dto.SearchDto
 import com.kvartalica.models.Categories
 import com.kvartalica.models.FlatCategories
 import com.kvartalica.models.Flats
+import com.kvartalica.utils.StringConvertor
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object FlatRepository {
     fun getById(id: Int): FlatDto? = transaction {
         Flats.select { Flats.id eq id }
-            .map { row ->
-                FlatDto(
-                    id = row[Flats.id].value,
-                    name = row[Flats.name],
-                    description = row[Flats.description],
-                    images = row[Flats.images],
-                    layout = row[Flats.layout],
-                    address = row[Flats.address],
-                    price = row[Flats.price],
-                    latitude = row[Flats.latitude]?.toDouble(),
-                    longitude = row[Flats.longitude]?.toDouble(),
-                    features = row[Flats.features],
-                    numberOfRooms = row[Flats.numberOfRooms],
-                    area = row[Flats.area]?.toDouble(),
-                    about = row[Flats.about],
-                    floor = row[Flats.floor],
-                    categoryId = row[Flats.categoryId],
-                    homeId = row[Flats.homeId],
-                    numberOfBathrooms = row[Flats.numberOfBathrooms],
-                    hasDecoration = row[Flats.hasDecoration],
-                    numberForSale = row[Flats.numberForSale],
-                    published = row[Flats.published]
-                )
-            }.singleOrNull()
+            .map { it.toFlatDto() }
+            .singleOrNull()
     }
 
     fun getAll(): List<FlatDto> = transaction {
-        Flats.selectAll().map { row ->
-            FlatDto(
-                id = row[Flats.id].value,
-                name = row[Flats.name],
-                description = row[Flats.description],
-                images = row[Flats.images],
-                layout = row[Flats.layout],
-                address = row[Flats.address],
-                price = row[Flats.price],
-                latitude = row[Flats.latitude]?.toDouble(),
-                longitude = row[Flats.longitude]?.toDouble(),
-                features = row[Flats.features],
-                numberOfRooms = row[Flats.numberOfRooms],
-                area = row[Flats.area]?.toDouble(),
-                about = row[Flats.about],
-                floor = row[Flats.floor],
-                categoryId = row[Flats.categoryId],
-                homeId = row[Flats.homeId],
-                numberOfBathrooms = row[Flats.numberOfBathrooms],
-                hasDecoration = row[Flats.hasDecoration],
-                numberForSale = row[Flats.numberForSale],
-                published = row[Flats.published]
-            )
-        }
+        Flats.selectAll().map { it.toFlatDto() } ?: emptyList()
     }
 
     fun create(flatDto: FlatDto) {
         transaction {
             Flats.insert {
-                it[Flats.name] = flatDto.name
-                it[Flats.description] = flatDto.description
-                it[Flats.images] = flatDto.images
-                it[Flats.layout] = flatDto.layout
-                it[Flats.address] = flatDto.address
-                it[Flats.price] = flatDto.price
-                it[Flats.latitude] = flatDto.latitude?.toBigDecimal()
-                it[Flats.longitude] = flatDto.longitude?.toBigDecimal()
-                it[Flats.features] = flatDto.features
-                it[Flats.numberOfRooms] = flatDto.numberOfRooms
-                it[Flats.area] = flatDto.area?.toBigDecimal()
-                it[Flats.about] = flatDto.about
-                it[Flats.floor] = flatDto.floor
-                it[Flats.categoryId] = flatDto.categoryId
-                it[Flats.homeId] = flatDto.homeId
-                it[Flats.numberOfBathrooms] = flatDto.numberOfBathrooms
-                it[Flats.hasDecoration] = flatDto.hasDecoration
-                it[Flats.numberForSale] = flatDto.numberForSale
-                it[Flats.published] = flatDto.published
+                it[name] = flatDto.name
+                it[description] = flatDto.description
+                it[images] = StringConvertor.joinToString(flatDto.images)
+                it[layout] = flatDto.layout
+                it[address] = flatDto.address
+                it[price] = flatDto.price
+                it[latitude] = flatDto.latitude?.toBigDecimal()
+                it[longitude] = flatDto.longitude?.toBigDecimal()
+                it[features] = StringConvertor.joinToString(flatDto.features)
+                it[numberOfRooms] = flatDto.numberOfRooms
+                it[area] = flatDto.area?.toBigDecimal()
+                it[about] = flatDto.about
+                it[floor] = flatDto.floor
+                it[homeId] = flatDto.homeId
+                it[numberOfBathrooms] = flatDto.numberOfBathrooms
+                it[hasDecoration] = flatDto.hasDecoration ?: false
+                it[numberForSale] = flatDto.numberForSale
+                it[published] = flatDto.published
             }
         }
     }
@@ -97,21 +56,20 @@ object FlatRepository {
             Flats.update({ Flats.id eq id }) {
                 it[name] = flatDto.name
                 it[description] = flatDto.description
-                it[images] = flatDto.images
+                it[images] = StringConvertor.joinToString(flatDto.images)
                 it[layout] = flatDto.layout
                 it[address] = flatDto.address
                 it[price] = flatDto.price
                 it[latitude] = flatDto.latitude?.toBigDecimal()
                 it[longitude] = flatDto.longitude?.toBigDecimal()
-                it[features] = flatDto.features
+                it[features] = StringConvertor.joinToString(flatDto.features)
                 it[numberOfRooms] = flatDto.numberOfRooms
                 it[area] = flatDto.area?.toBigDecimal()
                 it[about] = flatDto.about
                 it[floor] = flatDto.floor
-                it[categoryId] = flatDto.categoryId
                 it[homeId] = flatDto.homeId
                 it[numberOfBathrooms] = flatDto.numberOfBathrooms
-                it[hasDecoration] = flatDto.hasDecoration
+                it[hasDecoration] = flatDto.hasDecoration ?: false
                 it[numberForSale] = flatDto.numberForSale
                 it[published] = flatDto.published
             }
@@ -126,74 +84,106 @@ object FlatRepository {
     }
 
     fun getFlatsByHome(hId: Int): List<FlatCategoryDto> = transaction {
-        (Flats leftJoin FlatCategories leftJoin Categories)
+        val flatIds = Flats.slice(Flats.id)
             .select { Flats.homeId eq hId }
-            .map { row ->
-                val flatDto = FlatDto(
-                    id = row[Flats.id].value,
-                    name = row[Flats.name],
-                    description = row[Flats.description],
-                    images = row[Flats.images],
-                    layout = row[Flats.layout],
-                    address = row[Flats.address],
-                    price = row[Flats.price],
-                    latitude = row[Flats.latitude]?.toDouble(),
-                    longitude = row[Flats.longitude]?.toDouble(),
-                    features = row[Flats.features],
-                    numberOfRooms = row[Flats.numberOfRooms],
-                    area = row[Flats.area]?.toDouble(),
-                    about = row[Flats.about],
-                    floor = row[Flats.floor],
-                    categoryId = row[Flats.categoryId],
-                    homeId = row[Flats.homeId],
-                    numberOfBathrooms = row[Flats.numberOfBathrooms],
-                    hasDecoration = row[Flats.hasDecoration],
-                    numberForSale = row[Flats.numberForSale],
-                    published = row[Flats.published]
-                )
-                val categoryDto: CategoryDto? = row.getOrNull(FlatCategories.categories)?.let { catId ->
-                    CategoryDto(
-                        id = row[Categories.id].value,
-                        name = row[Categories.name],
-                        isOnMainPage = row[Categories.isOnMainPage]
-                    )
-                }
-                FlatCategoryDto(flat = flatDto, category = categoryDto)
-            }
+            .map { it[Flats.id].value }
+
+        if (flatIds.isEmpty()) return@transaction emptyList()
+        val rows = (Flats innerJoin FlatCategories innerJoin Categories)
+            .select { Flats.id inList flatIds }
+
+        rows.groupBy(
+            { it.toFlatDto() },
+            { row -> row.toCategoryDto() }
+        ).map { (flat, categories) ->
+            FlatCategoryDto(flat = flat, categories = categories)
+        }
     }
 
     fun getFlatsByCategory(cId: Int): List<FlatCategoryDto> = transaction {
-        (Flats innerJoin FlatCategories innerJoin Categories)
-            .select { Categories.id eq cId }
-            .map { row ->
-                val flatDto = FlatDto(
-                    id = row[Flats.id].value,
-                    name = row[Flats.name],
-                    description = row[Flats.description],
-                    images = row[Flats.images],
-                    layout = row[Flats.layout],
-                    address = row[Flats.address],
-                    price = row[Flats.price],
-                    latitude = row[Flats.latitude]?.toDouble(),
-                    longitude = row[Flats.longitude]?.toDouble(),
-                    features = row[Flats.features],
-                    numberOfRooms = row[Flats.numberOfRooms],
-                    area = row[Flats.area]?.toDouble(),
-                    about = row[Flats.about],
-                    floor = row[Flats.floor],
-                    categoryId = row[Flats.categoryId],
-                    homeId = row[Flats.homeId],
-                    numberOfBathrooms = row[Flats.numberOfBathrooms],
-                    hasDecoration = row[Flats.hasDecoration],
-                    numberForSale = row[Flats.numberForSale],
-                    published = row[Flats.published]
-                )
-                val categoryDto = CategoryDto(
-                    id = row[Categories.id].value,
-                    name = row[Categories.name],
-                    isOnMainPage = row[Categories.isOnMainPage]
-                )
-                FlatCategoryDto(flat = flatDto, category = categoryDto)
-            }
+        val flatIds = FlatCategories.slice(FlatCategories.flat)
+            .select { FlatCategories.categories eq cId }
+            .map { it[FlatCategories.flat] }
+
+        if (flatIds.isEmpty()) return@transaction emptyList()
+        val rows = (Flats innerJoin FlatCategories innerJoin Categories)
+            .select { Flats.id inList flatIds }
+
+        rows.groupBy(
+            { it.toFlatDto() },
+            { row -> row.toCategoryDto() }
+        ).map { (flat, categories) ->
+            FlatCategoryDto(flat = flat, categories = categories)
+        }
     }
+
+    fun search(query: SearchDto): List<FlatCategoryDto> = transaction {
+        val conditions = mutableListOf<Op<Boolean>>()
+        query.query?.takeIf { it.isNotBlank() }?.let { q ->
+            val pattern = "%${q.trim()}%"
+            conditions += (Flats.name like pattern) or (Flats.description like pattern)
+        }
+        query.minPrice?.let { conditions += (Flats.price greaterEq it) }
+        query.maxPrice?.let { conditions += (Flats.price lessEq it) }
+        query.rooms?.let { conditions += (Flats.numberOfRooms eq it) }
+        query.bathrooms?.let { conditions += (Flats.numberOfBathrooms eq it) }
+        query.isDecorated?.let { conditions += (Flats.hasDecoration eq it) }
+        query.homeId?.let { conditions += (Flats.homeId eq it) }
+        query.hasParks?.takeIf { it }?.let { conditions += (Flats.features like "%park%") }
+        query.hasSchools?.takeIf { it }?.let { conditions += (Flats.features like "%school%") }
+        query.hasStores?.takeIf { it }?.let { conditions += (Flats.features like "%store%") }
+
+        val joinQuery = Flats
+            .leftJoin(FlatCategories, { Flats.id }, { FlatCategories.flat })
+            .leftJoin(Categories, { FlatCategories.categories }, { Categories.id })
+        val base = joinQuery.select {
+            val baseCondition = if (conditions.isNotEmpty()) conditions.reduce { acc, op -> acc and op } else Op.TRUE
+            if (!query.categoriesId.isNullOrEmpty()) {
+                baseCondition and (FlatCategories.categories inList query.categoriesId)
+            } else {
+                baseCondition
+            }
+        }
+        val sorted = when (query.sortBy) {
+            "price" -> base.orderBy(Flats.price to SortOrder.valueOf(query.sortOrder?.uppercase() ?: "ASC"))
+            "rooms" -> base.orderBy(Flats.numberOfRooms to SortOrder.valueOf(query.sortOrder?.uppercase() ?: "ASC"))
+            "area" -> base.orderBy(Flats.area to SortOrder.valueOf(query.sortOrder?.uppercase() ?: "ASC"))
+            "location" -> base.orderBy(Flats.address to SortOrder.valueOf(query.sortOrder?.uppercase() ?: "ASC"))
+            else -> base
+        }
+        sorted.groupBy(
+            { it.toFlatDto() },
+            { row -> row.getOrNull(Categories.id)?.let { row.toCategoryDto() } }
+        ).map { (flat, categories) ->
+            FlatCategoryDto(flat = flat, categories = categories.filterNotNull())
+        }
+    }
+
+    private fun ResultRow.toFlatDto() = FlatDto(
+        id = this[Flats.id].value,
+        name = this[Flats.name],
+        description = this[Flats.description],
+        images = StringConvertor.parseString(this[Flats.images]),
+        layout = this[Flats.layout],
+        address = this[Flats.address],
+        price = this[Flats.price],
+        latitude = this[Flats.latitude]?.toDouble(),
+        longitude = this[Flats.longitude]?.toDouble(),
+        features = StringConvertor.parseString(this[Flats.features]),
+        numberOfRooms = this[Flats.numberOfRooms],
+        area = this[Flats.area]?.toDouble(),
+        about = this[Flats.about],
+        floor = this[Flats.floor],
+        homeId = this[Flats.homeId],
+        numberOfBathrooms = this[Flats.numberOfBathrooms],
+        hasDecoration = this[Flats.hasDecoration],
+        numberForSale = this[Flats.numberForSale],
+        published = this[Flats.published]
+    )
+
+    private fun ResultRow.toCategoryDto() = CategoryDto(
+        id = this[Categories.id].value,
+        name = this[Categories.name],
+        isOnMainPage = this[Categories.isOnMainPage]
+    )
 }

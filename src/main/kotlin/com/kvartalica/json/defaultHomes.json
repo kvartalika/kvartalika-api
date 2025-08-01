@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "name": "ЖК Новый",
+    "description": "Историческое здание с видом на канал",
+    "images": ["home1_1.jpg", "home1_2.jpg"],
+    "address": "Г. Томск, ул. Ленина 36",
+    "latitude": 52.3702,
+    "longitude": 4.8952,
+    "yearBuilt": 2024,
+    "history": [
+      "Построен как жилой дом в конце XIX века",
+      "Реконструирован в 2005 году",
+      "Признан архитектурным памятником"
+    ],
+    "historyImages": ["history1_1.jpg", "history1_2.jpg"],
+    "features": ["Высокие потолки", "Историческая кладка", "Деревянные балки"],
+    "about": "Дом сохранил оригинальный облик и уникальную атмосферу старого Амстердама.",
+    "numberOfFloors": 4,
+    "storesNearby": true,
+    "schoolsNearby": true,
+    "hospitalsNearby": false,
+    "hasYards": false,
+    "yardsImages": null,
+    "published": true
+  },
+  {
+    "id": 2,
+    "name": "ЖК Нижний",
+    "description": "Новый многоквартирный дом в спальном районе",
+    "images": ["home2_1.jpg", "home2_2.jpg", "home2_3.jpg"],
+    "address": "Г. Томск, ул. Балтийская 32",
+    "latitude": 51.9225,
+    "longitude": 4.4792,
+    "yearBuilt": 2021,
+    "history": [
+      "Построен в рамках программы городской застройки",
+      "Сдан в эксплуатацию в 2022 году"
+    ],
+    "historyImages": ["construction2_1.jpg", "construction2_2.jpg"],
+    "features": ["Подземный паркинг", "Современные лифты", "Энергоэффективные материалы"],
+    "about": "Удобное жильё для семей, в пешей доступности магазины, школы и парки.",
+    "numberOfFloors": 10,
+    "storesNearby": true,
+    "schoolsNearby": true,
+    "hospitalsNearby": true,
+    "hasYards": true,
+    "yardsImages": ["yard2_1.jpg", "yard2_2.jpg"],
+    "published": true
+  }
+]

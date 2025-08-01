@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "Горячие предложения",
+    "isOnMainPage": true
+  },
+  {
+    "id": 2,
+    "name": "Новинки",
+    "isOnMainPage": true
+  },
+  {
+    "id": 3,
+    "name": "Однокомнатные квартиры",
+    "isOnMainPage": true
+  },
+  {
+    "id": 4,
+    "name": "Двухкомнатные квартиры",
+    "isOnMainPage": true
+  },
+  {
+    "id": 5,
+    "name": "Квартиры в ЖК Нижний",
+    "isOnMainPage": true
+  }
+]

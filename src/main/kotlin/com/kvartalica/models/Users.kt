@@ -14,4 +14,5 @@ object Users : UUIDTable() {
     val updatedAt = datetime("updated_at").clientDefault { LocalDateTime.now() }
     val role = varchar("role", 50).default("CLIENT")
     val password = varchar("password", 100)
+    val telegramId = varchar("telegram_id", 100).nullable()
 }

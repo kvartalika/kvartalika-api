@@ -22,7 +22,8 @@ object BidsRepository {
     }
 
     fun findById(id: Int): BidsDto? = transaction {
-        Bids.select { Bids.id eq id }
+        Bids.selectAll()
+            .where { Bids.id eq id }
             .limit(1)
             .map {
                 BidsDto(
