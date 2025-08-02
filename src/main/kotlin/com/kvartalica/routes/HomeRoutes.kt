@@ -15,7 +15,6 @@ fun Route.homeRoutes() {
             val homes = HomeRepository.getAll()
             call.respond(homes)
         }
-
         get("{id}/flats") {
             val id = call.parameters["id"]?.toIntOrNull()
             if (id == null) {

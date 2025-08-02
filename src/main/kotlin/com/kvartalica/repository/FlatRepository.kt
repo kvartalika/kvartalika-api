@@ -103,19 +103,24 @@ object FlatRepository {
     }
 
     fun getFlatsByHome(hId: Int): List<FlatCategoryDto> = transaction {
-        val flatIds = Flats.slice(Flats.id)
+        val flatIds = Flats
+            .slice(Flats.id)
             .select { Flats.homeId eq hId }
             .map { it[Flats.id].value }
 
         if (flatIds.isEmpty()) return@transaction emptyList()
-        val rows = (Flats innerJoin FlatCategories innerJoin Categories)
+
+        val rows = (Flats leftJoin FlatCategories leftJoin Categories)
             .select { Flats.id inList flatIds }
 
         rows.groupBy(
             { it.toFlatDto() },
-            { row -> row.toCategoryDto() }
+            { row -> row.getOrNull(Categories.id)?.let { row.toCategoryDto() } }
         ).map { (flat, categories) ->
-            FlatCategoryDto(flat = flat, categories = categories)
+            FlatCategoryDto(
+                flat = flat,
+                categories = categories.filterNotNull()
+            )
         }
     }
 

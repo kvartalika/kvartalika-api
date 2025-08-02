@@ -29,6 +29,7 @@ object HomeRepository {
                 it[hasYards] = homeDto.hasYards
                 it[yardsImages] = StringConvertor.joinToString(homeDto.yardsImages)
                 it[published] = homeDto.published
+                it[model3D] = homeDto.model3D
             }
         }
     }
@@ -66,6 +67,7 @@ object HomeRepository {
                 it[hasYards] = homeDto.hasYards
                 it[yardsImages] = StringConvertor.joinToString(homeDto.yardsImages)
                 it[published] = homeDto.published
+                it[model3D] = homeDto.model3D
             }
         }
     }
@@ -96,5 +98,6 @@ object HomeRepository {
         hasYards = this[Homes.hasYards],
         yardsImages = StringConvertor.parseString(this[Homes.yardsImages]),
         published = this[Homes.published],
+        model3D = this[Homes.model3D],
     )
 }

@@ -60,7 +60,12 @@ fun Route.flatRoutes() {
             }
             post {
                 val dto = call.receive<FlatCategoryDto>()
+                val flat = dto.flat
+                val categories = dto.categories
                 FlatRepository.create(dto.flat)
+                categories.forEach { category ->
+                    CategoriesRepository.addCategoryToFlat(flat.id, category.id)
+                }
                 call.respondText("Flat created", status = io.ktor.http.HttpStatusCode.Created)
             }
             put("/{id}") {
