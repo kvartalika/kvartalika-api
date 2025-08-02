@@ -95,4 +95,10 @@ object FilesRepository {
             true
         } else false
     }
+
+    fun getAllFiles(): List<String> =
+        Files.walk(root)
+            .filter { Files.isRegularFile(it) }
+            .map { root.relativize(it).toString().replace("\\", "/") }
+            .toList()
 }

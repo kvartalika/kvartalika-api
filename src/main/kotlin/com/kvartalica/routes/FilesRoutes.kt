@@ -44,6 +44,10 @@ fun Route.filesRoutes() {
     }
 
     route("/files") {
+        get("/all") {
+            val files = FilesRepository.getAllFiles()
+            call.respond(files)
+        }
         get("/{path...}") {
             val path = call.parameters.getAll("path")!!.joinToString(File.separator)
             val file = FilesRepository.getFile(path)
