@@ -144,13 +144,19 @@ object FlatRepository {
     fun search(query: SearchDto): List<FlatCategoryDto> = transaction {
         val conditions = mutableListOf<Op<Boolean>>()
         query.query?.takeIf { it.isNotBlank() }?.let { q ->
-            val pattern = "%${q.trim()}%"
-            conditions += (Flats.name like pattern) or (Flats.description like pattern)
+            val pattern = "%${q.trim()}%".lowercase()
+            conditions += (Flats.name.lowerCase() like pattern) or
+                    (Flats.description.lowerCase() like pattern) or
+                    (Flats.address.lowerCase() like pattern)
         }
         query.minPrice?.let { conditions += (Flats.price greaterEq it) }
         query.maxPrice?.let { conditions += (Flats.price lessEq it) }
-        query.rooms?.let { conditions += (Flats.numberOfRooms eq it) }
-        query.bathrooms?.let { conditions += (Flats.numberOfBathrooms eq it) }
+        query.rooms?.let {
+            conditions += if (it == 3) Flats.numberOfRooms greaterEq it else Flats.numberOfRooms eq it
+        }
+        query.bathrooms?.let {
+            conditions += if (it == 3) Flats.numberOfBathrooms greaterEq it else Flats.numberOfBathrooms eq it
+        }
         query.isDecorated?.let { conditions += (Flats.hasDecoration eq it) }
         query.homeId?.let { conditions += (Flats.homeId eq it) }
         query.hasParks?.takeIf { it }?.let { conditions += (Flats.features like "%park%") }
