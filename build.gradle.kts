@@ -37,8 +37,6 @@ dependencies {
     implementation("io.ktor:ktor-server-auth:3.2.1")
     implementation("io.ktor:ktor-server-auth-jwt:3.2.1")
     implementation("io.ktor:ktor-server-csrf:3.2.1")
-    // Environment
-    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     // Session Management
     implementation("io.ktor:ktor-server-sessions:3.2.1")
     // CORS & Headers

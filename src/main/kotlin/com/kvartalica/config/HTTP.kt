@@ -12,6 +12,9 @@ import io.ktor.server.routing.*
 fun Application.configureHTTP() {
     install(CORS) {
         anyHost()
+        allowHost(Config.allowHostHttp, schemes = listOf("http"))
+        allowHost(Config.allowHostHttps, schemes = listOf("https"))
+
         allowCredentials = true
         allowMethod(HttpMethod.Options)
         allowMethod(HttpMethod.Get)

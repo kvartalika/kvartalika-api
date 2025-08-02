@@ -1,7 +1,7 @@
 package com.kvartalica.utils
 
+import com.kvartalica.config.Config
 import com.kvartalica.repository.UserRepository
-import io.github.cdimascio.dotenv.dotenv
 import io.ktor.client.*
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -13,7 +13,6 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 object TelegramNotificationService {
-    private val env = dotenv()
     private val httpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json(Json {
@@ -22,9 +21,8 @@ object TelegramNotificationService {
             })
         }
     }
-    private val botToken = env["BOT_TOKEN"]
-        ?: throw IllegalStateException("TELEGRAM_BOT_TOKEN не найден")
-    private val baseUrl = "https://api.telegram.org/bot$botToken"
+
+    private val baseUrl = Config.botBaseUrl + Config.botToken
 
     suspend fun notifyAllUsers(message: String) {
         val users = UserRepository.getAllTelegramUsers()

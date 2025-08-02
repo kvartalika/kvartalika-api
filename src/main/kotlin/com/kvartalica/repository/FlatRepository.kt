@@ -16,14 +16,33 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object FlatRepository {
-    fun getById(id: Int): FlatDto? = transaction {
-        Flats.select { Flats.id eq id }
-            .map { it.toFlatDto() }
-            .singleOrNull()
+    fun getById(id: Int): FlatCategoryDto? = transaction {
+        val rows = (Flats leftJoin FlatCategories leftJoin Categories)
+            .select { Flats.id eq id }
+        if (rows.empty()) return@transaction null
+        rows.groupBy(
+            { it.toFlatDto() },
+            { row -> row.getOrNull(Categories.id)?.let { row.toCategoryDto() } }
+        ).entries.firstOrNull()?.let { (flat, cats) ->
+            FlatCategoryDto(
+                flat = flat,
+                categories = cats.filterNotNull()
+            )
+        }
     }
 
-    fun getAll(): List<FlatDto> = transaction {
-        Flats.selectAll().map { it.toFlatDto() } ?: emptyList()
+    fun getAll(): List<FlatCategoryDto> = transaction {
+        val rows = (Flats leftJoin FlatCategories leftJoin Categories)
+            .selectAll()
+        rows.groupBy(
+            { it.toFlatDto() },
+            { row -> row.getOrNull(Categories.id)?.let { row.toCategoryDto() } }
+        ).map { (flat, cats) ->
+            FlatCategoryDto(
+                flat = flat,
+                categories = cats.filterNotNull()
+            )
+        }
     }
 
     fun create(flatDto: FlatDto) {

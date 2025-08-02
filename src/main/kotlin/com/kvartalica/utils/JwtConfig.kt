@@ -3,15 +3,13 @@ package com.kvartalica.utils
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.interfaces.DecodedJWT
+import com.kvartalica.config.Config
 import com.kvartalica.models.UserRole
-import io.github.cdimascio.dotenv.dotenv
 import java.util.*
 
 object JwtConfig {
-    val env = dotenv()
-
-    private val SECRET = env["SECRET"]
-    private val ISSUER = env["ISSUER"]
+    private val SECRET = Config.secret
+    private val ISSUER = Config.issuer
     private const val ACCESS_VALIDITY_MS = (15 * 60 * 1000)
     private const val REFRESH_VALIDITY_MS = (7 * 24 * 60 * 60 * 1000)
 

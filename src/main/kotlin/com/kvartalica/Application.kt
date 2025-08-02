@@ -11,11 +11,12 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
-    configureHTTP()
+    configureDatabase()
     configureSecurity()
     configureSerialization()
-    configureDatabase()
-    configureMonitoring()
+    configureHTTP()
     configureRouting()
+    configureMonitoring()
+
     initAdmin()
 }

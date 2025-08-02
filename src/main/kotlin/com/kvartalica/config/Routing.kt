@@ -18,9 +18,5 @@ fun Application.configureRouting() {
         categoryRoutes()
         flatRoutes()
         homeRoutes()
-
-        authenticate("content-jwt") {
-
-        }
     }
 }

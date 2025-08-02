@@ -1,24 +1,26 @@
 package com.kvartalica.utils
 
+import com.kvartalica.config.Config
 import com.kvartalica.models.Users
-import io.github.cdimascio.dotenv.dotenv
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.mindrot.jbcrypt.BCrypt
 
 fun initAdmin() {
-    val env = dotenv()
-    val name = env["INIT_NAME"]
-    val surname = env["INIT_SURNAME"]
-    val email = env["INIT_EMAIL"]
-    val password = env["INIT_PASSWORD"]
-    val telegramId = env["INIT_TELEGRAM_ID"]
+    val name = Config.initName
+    val surname = Config.initSurname
+    val email = Config.initEmail
+    val password = Config.initPassword
+    val telegramId = Config.initTelegramId
 
     val hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt())
 
     transaction {
-        val exists = Users.select { Users.email eq email }.any()
+        val exists = Users
+            .selectAll()
+            .where { Users.email eq email }
+            .any()
         if (!exists) {
             Users.insert {
                 it[Users.name] = name
