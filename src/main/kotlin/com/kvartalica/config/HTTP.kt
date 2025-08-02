@@ -11,7 +11,7 @@ import io.ktor.server.routing.*
 
 fun Application.configureHTTP() {
     install(CORS) {
-        anyHost()
+//        anyHost()
         allowHost(Config.allowHostHttp, schemes = listOf("http"))
         allowHost(Config.allowHostHttps, schemes = listOf("https"))
 

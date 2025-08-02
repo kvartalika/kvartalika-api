@@ -11,6 +11,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.SameSite
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
@@ -73,11 +74,9 @@ fun Route.adminRoutes() {
 
     post("/auth/refresh") {
         try {
-            val body = call.receive<Map<String, String>>()
-            println(body.toString())
-            val refreshToken = body["refreshToken"]
+            val refreshToken = call.request.cookies["refreshToken"]
                 ?: return@post call.respond(HttpStatusCode.BadRequest, "Refresh token required")
-            println(refreshToken)
+
             val decodedJWT = JwtConfig.verifyToken(refreshToken)
             if (decodedJWT == null) {
                 call.respond(HttpStatusCode.Unauthorized, "Invalid refresh token")
@@ -109,10 +108,21 @@ fun Route.adminRoutes() {
                 role = userRole
             )
             val newRefreshToken = JwtConfig.generateRefreshToken(userId)
+            call.response.cookies.append(
+                Cookie(
+                    name = "refreshToken",
+                    value = newRefreshToken,
+                    maxAge = 60 * 60 * 24 * 30,
+                    path = "/",
+                    httpOnly = true,
+                    secure = false, // в проде тру
+//                    extensions = mapOf("SameSite" to "None") в проде включить
+                )
+            )
+
             call.respond(
                 mapOf(
                     "accessToken" to newAccessToken,
-                    "refreshToken" to newRefreshToken,
                     "role" to userRole.name
                 )
             )
@@ -141,6 +151,7 @@ fun Route.adminRoutes() {
                             it[Users.phone] = request.phone
                             it[Users.password] = hashedPassword
                             it[Users.role] = UserRole.CONTENT_MANAGER.name
+                            it[Users.telegramId] = request.telegramId
                         }[Users.id]
                     }
                     call.respond(
@@ -163,7 +174,8 @@ fun Route.adminRoutes() {
                         it[Users.patronymic] = request.patronymic
                         it[Users.email] = request.email
                         it[Users.phone] = request.phone
-                        it[Users.password] = hashedPassword
+//                        it[Users.password] = hashedPassword
+                        it[Users.telegramId] = request.telegramId
                     }
                 }
                 if (updated > 0) {
@@ -190,15 +202,15 @@ fun Route.adminRoutes() {
 
         route("/admin/admin") {
             get {
-                val managers = UserRepository.getAll()
-                call.respond(managers)
+                val admins = UserRepository.getAll().filter { it.role == UserRole.ADMIN.name }
+                call.respond(admins)
             }
 
             post {
                 val request = call.receive<UserDto>()
                 val hashedPassword = BCrypt.hashpw(request.password, BCrypt.gensalt())
                 try {
-                    val managerId = transaction {
+                    val adminId = transaction {
                         Users.insert {
                             it[Users.name] = request.name
                             it[Users.surname] = request.surname
@@ -207,11 +219,12 @@ fun Route.adminRoutes() {
                             it[Users.phone] = request.phone
                             it[Users.password] = hashedPassword
                             it[Users.role] = UserRole.ADMIN.name
+                            it[Users.telegramId] = request.telegramId
                         }[Users.id]
                     }
                     call.respond(
                         HttpStatusCode.Created,
-                        mapOf("message" to "Admin created", "id" to "$managerId")
+                        mapOf("message" to "Admin created", "id" to "$adminId")
                     )
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.Conflict, "Admin already exists")
@@ -229,7 +242,8 @@ fun Route.adminRoutes() {
                         it[Users.patronymic] = request.patronymic
                         it[Users.email] = request.email
                         it[Users.phone] = request.phone
-                        it[Users.password] = hashedPassword
+//                        it[Users.password] = hashedPassword
+                        it[Users.telegramId] = request.telegramId
                     }
                 }
                 if (updated > 0) {
