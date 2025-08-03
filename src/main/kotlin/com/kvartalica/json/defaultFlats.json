@@ -3,13 +3,19 @@
     "id": 1,
     "name": "Солнечный Лофт",
     "description": "Уютный лофт с естественным освещением",
-    "images": ["img1.jpg", "img2.jpg"],
+    "images": [
+      "img1.jpg",
+      "img2.jpg"
+    ],
     "layout": "Студия",
     "address": "ул. Мэйн, 123, Амстердам",
     "price": 250000,
     "latitude": 52.3676,
     "longitude": 4.9041,
-    "features": ["Балкон", "Лифт"],
+    "features": [
+      "Балкон",
+      "Лифт"
+    ],
     "numberOfRooms": 1,
     "area": 45.0,
     "about": "Идеально для пары или одного человека",
@@ -24,13 +30,18 @@
     "id": 2,
     "name": "Квартира с видом на канал",
     "description": "Окна выходят на исторический канал",
-    "images": ["canal1.jpg"],
+    "images": [
+      "canal1.jpg"
+    ],
     "layout": "2 комнаты",
     "address": "ул. Канал, 45, Амстердам",
     "price": 450000,
     "latitude": 52.3702,
     "longitude": 4.8952,
-    "features": ["Камин", "Подвал"],
+    "features": [
+      "Камин",
+      "Подвал"
+    ],
     "numberOfRooms": 2,
     "area": 78.5,
     "about": "Просторная и удобно расположенная",
@@ -45,13 +56,18 @@
     "id": 3,
     "name": "Современная студия",
     "description": "Компактная студия для студентов",
-    "images": ["studio1.jpg"],
+    "images": [
+      "studio1.jpg"
+    ],
     "layout": "Студия",
     "address": "ул. Скул, 88, Эйндховен",
     "price": 120000,
     "latitude": 51.4416,
     "longitude": 5.4697,
-    "features": ["Спортзал", "Выход на крышу"],
+    "features": [
+      "Спортзал",
+      "Выход на крышу"
+    ],
     "numberOfRooms": 1,
     "area": 30.0,
     "about": "Доступно и удобно",
@@ -66,13 +82,19 @@
     "id": 4,
     "name": "Семейная квартира",
     "description": "Идеальна для семьи с детьми",
-    "images": ["family1.jpg", "family2.jpg"],
+    "images": [
+      "family1.jpg",
+      "family2.jpg"
+    ],
     "layout": "3 комнаты",
     "address": "пр. Парк, 23, Утрехт",
     "price": 520000,
     "latitude": 52.0907,
     "longitude": 5.1214,
-    "features": ["Сад", "Гараж"],
+    "features": [
+      "Сад",
+      "Гараж"
+    ],
     "numberOfRooms": 3,
     "area": 110.0,
     "about": "Безопасный район",
@@ -87,13 +109,19 @@
     "id": 5,
     "name": "Пентхаус",
     "description": "Роскошный пентхаус на верхнем этаже",
-    "images": ["penthouse.jpg"],
+    "images": [
+      "penthouse.jpg"
+    ],
     "layout": "4 комнаты",
     "address": "Башня Скай, 99, Роттердам",
     "price": 980000,
     "latitude": 51.9225,
     "longitude": 4.4792,
-    "features": ["Бассейн", "Сауна", "Умный дом"],
+    "features": [
+      "Бассейн",
+      "Сауна",
+      "Умный дом"
+    ],
     "numberOfRooms": 4,
     "area": 160.0,
     "about": "Непревзойдённые виды и комфорт",
@@ -108,7 +136,9 @@
     "id": 6,
     "name": "Компактная квартира",
     "description": "Простая и доступная квартира",
-    "images": ["compact.jpg"],
+    "images": [
+      "compact.jpg"
+    ],
     "layout": "1 комната",
     "address": "ул. Бюджетная, 12, Гронинген",
     "price": 98000,
@@ -129,13 +159,19 @@
     "id": 7,
     "name": "Квартира в центре",
     "description": "Находится прямо в центре города",
-    "images": ["center1.jpg", "center2.jpg"],
+    "images": [
+      "center1.jpg",
+      "center2.jpg"
+    ],
     "layout": "2 комнаты",
     "address": "Центральная площадь, 5, Гаага",
     "price": 390000,
     "latitude": 52.0705,
     "longitude": 4.3007,
-    "features": ["Терраса", "Кладовая"],
+    "features": [
+      "Терраса",
+      "Кладовая"
+    ],
     "numberOfRooms": 2,
     "area": 75.0,
     "about": "Всё рядом — пешком",
@@ -150,13 +186,18 @@
     "id": 8,
     "name": "Пригородное убежище",
     "description": "Тихая и спокойная местность",
-    "images": ["retreat.jpg"],
+    "images": [
+      "retreat.jpg"
+    ],
     "layout": "3 комнаты",
     "address": "ул. Листопадная, 9, Харлем",
     "price": 310000,
     "latitude": 52.3874,
     "longitude": 4.6462,
-    "features": ["Задний двор", "Чердак"],
+    "features": [
+      "Задний двор",
+      "Чердак"
+    ],
     "numberOfRooms": 3,
     "area": 92.0,
     "about": "Идеально для удалённой работы",
@@ -171,13 +212,18 @@
     "id": 9,
     "name": "Студенческое жильё",
     "description": "Доступное жильё для студентов",
-    "images": ["student1.jpg"],
+    "images": [
+      "student1.jpg"
+    ],
     "layout": "Общая",
     "address": "ул. Общежития, Делфт",
     "price": 65000,
     "latitude": 52.0116,
     "longitude": 4.3571,
-    "features": ["Общая кухня", "Парковка для велосипедов"],
+    "features": [
+      "Общая кухня",
+      "Парковка для велосипедов"
+    ],
     "numberOfRooms": 1,
     "area": 18.0,
     "about": "Отлично подходит для студентов",
@@ -192,13 +238,19 @@
     "id": 10,
     "name": "Эко-квартира",
     "description": "Экологичная и энергоэффективная",
-    "images": ["eco1.jpg", "eco2.jpg"],
+    "images": [
+      "eco1.jpg",
+      "eco2.jpg"
+    ],
     "layout": "2 комнаты",
     "address": "ул. Зелёная, Неймеген",
     "price": 330000,
     "latitude": 51.8126,
     "longitude": 5.8372,
-    "features": ["Солнечные панели", "Система сбора дождевой воды"],
+    "features": [
+      "Солнечные панели",
+      "Система сбора дождевой воды"
+    ],
     "numberOfRooms": 2,
     "area": 70.0,
     "about": "Жизнь в гармонии с природой",

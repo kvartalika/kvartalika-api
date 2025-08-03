@@ -1,7 +1,6 @@
 package com.kvartalica.routes
 
 import com.kvartalica.dto.FlatCategoryDto
-import com.kvartalica.dto.FlatDto
 import com.kvartalica.repository.CategoriesRepository
 import com.kvartalica.repository.FlatRepository
 import io.ktor.server.auth.*
@@ -60,12 +59,7 @@ fun Route.flatRoutes() {
             }
             post {
                 val dto = call.receive<FlatCategoryDto>()
-                val flat = dto.flat
-                val categories = dto.categories
-                FlatRepository.create(dto.flat)
-                categories.forEach { category ->
-                    CategoriesRepository.addCategoryToFlat(flat.id, category.id)
-                }
+                FlatRepository.create(dto)
                 call.respondText("Flat created", status = io.ktor.http.HttpStatusCode.Created)
             }
             put("/{id}") {
@@ -75,7 +69,7 @@ fun Route.flatRoutes() {
                     return@put
                 }
                 val dto = call.receive<FlatCategoryDto>()
-                FlatRepository.update(id, dto.flat)
+                FlatRepository.update(id, dto)
                 call.respondText("Flat updated", status = io.ktor.http.HttpStatusCode.OK)
             }
             delete("/{id}") {

@@ -8,7 +8,7 @@ object Flats : IntIdTable() {
     val images = text("images").nullable()
     val layout = varchar("layout", length = 255).nullable()
     val address = varchar("address", length = 500).nullable()
-    val price = integer("price").nullable()
+    val price = long("price").nullable()
     val latitude = decimal("latitude", precision = 9, scale = 6).nullable()
     val longitude = decimal("longitude", precision = 9, scale = 6).nullable()
     val features = text("features").nullable()

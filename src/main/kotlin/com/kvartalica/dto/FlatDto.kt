@@ -10,7 +10,7 @@ data class FlatDto(
     val images: List<String>? = null,
     val layout: String? = null,
     val address: String? = null,
-    val price: Int? = null,
+    val price: Long? = null,
     val latitude: Double? = null,
     val longitude: Double? = null,
     val features: List<String>? = null,

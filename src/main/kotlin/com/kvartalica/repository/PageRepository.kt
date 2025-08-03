@@ -4,17 +4,13 @@ import com.kvartalica.dto.PageInfoDto
 import com.kvartalica.dto.SocialMediaDto
 import com.kvartalica.models.PageInfo
 import com.kvartalica.models.SocialMedia
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 
 object PageRepository {
     fun getPageInfo(): PageInfoDto {
-         val pageInfo = transaction {
+        val pageInfo = transaction {
             PageInfo
                 .selectAll()
                 .limit(1)
@@ -90,9 +86,15 @@ object PageRepository {
     }
 
     fun createSocialMedia(socialMediaDto: SocialMediaDto) {
+        val cleanedImage = if (socialMediaDto.image?.startsWith("/") == true) {
+            socialMediaDto.image.removePrefix("/")
+        } else {
+            socialMediaDto.image
+        }
+
         transaction {
             SocialMedia.insert {
-                it[image] = socialMediaDto.image
+                it[image] = cleanedImage
                 it[link] = socialMediaDto.link
             }
         }
@@ -102,8 +104,14 @@ object PageRepository {
         transaction {
             SocialMedia.deleteAll()
             socialMediaDto.forEach { sm ->
+                val cleanedImage = if (sm.image?.startsWith("/") == true) {
+                    sm.image.removePrefix("/")
+                } else {
+                    sm.image
+                }
+
                 SocialMedia.insert {
-                    it[image] = sm.image
+                    it[image] = cleanedImage
                     it[link] = sm.link
                 }
             }

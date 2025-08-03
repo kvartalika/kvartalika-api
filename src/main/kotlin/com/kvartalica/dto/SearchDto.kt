@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SearchDto(
     val query: String? = null,
-    val minPrice: Int? = null,
-    val maxPrice: Int? = null,
+    val minPrice: Long? = null,
+    val maxPrice: Long? = null,
     val rooms: Int? = null,
     val bathrooms: Int? = null,
     val isDecorated: Boolean? = null,

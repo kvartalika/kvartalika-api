@@ -10,16 +10,20 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object HomeRepository {
     fun create(homeDto: HomeDto) {
         transaction {
+            val cleanedImages = homeDto.images?.map(::cleanPath)
+            val cleanedHistoryImages = homeDto.historyImages?.map(::cleanPath)
+            val cleanedYardsImages = homeDto.yardsImages?.map(::cleanPath)
+            val cleanedModel3D = homeDto.model3D?.let(::cleanPath)
             Homes.insert {
                 it[name] = homeDto.name
                 it[description] = homeDto.description
-                it[image] = StringConvertor.joinToString(homeDto.images)
+                it[image] = StringConvertor.joinToString(cleanedImages)
                 it[address] = homeDto.address
                 it[latitude] = homeDto.latitude?.toBigDecimal()
                 it[longitude] = homeDto.longitude?.toBigDecimal()
                 it[yearBuilt] = homeDto.yearBuilt
                 it[history] = StringConvertor.joinToString(homeDto.history)
-                it[historyImages] = StringConvertor.joinToString(homeDto.historyImages)
+                it[historyImages] = StringConvertor.joinToString(cleanedHistoryImages)
                 it[features] = StringConvertor.joinToString(homeDto.features)
                 it[about] = homeDto.about
                 it[numberOfFloors] = homeDto.numberOfFloors
@@ -27,9 +31,9 @@ object HomeRepository {
                 it[schoolsNearby] = homeDto.schoolsNearby
                 it[hospitalsNearby] = homeDto.hospitalsNearby
                 it[hasYards] = homeDto.hasYards
-                it[yardsImages] = StringConvertor.joinToString(homeDto.yardsImages)
+                it[yardsImages] = StringConvertor.joinToString(cleanedYardsImages)
                 it[published] = homeDto.published
-                it[model3D] = homeDto.model3D
+                it[model3D] = cleanedModel3D
             }
         }
     }
@@ -48,16 +52,20 @@ object HomeRepository {
 
     fun update(id: Int, homeDto: HomeDto) {
         transaction {
+            val cleanedImages = homeDto.images?.map(::cleanPath)
+            val cleanedHistoryImages = homeDto.historyImages?.map(::cleanPath)
+            val cleanedYardsImages = homeDto.yardsImages?.map(::cleanPath)
+            val cleanedModel3D = homeDto.model3D?.let(::cleanPath)
             Homes.update({ Homes.id eq id }) {
                 it[name] = homeDto.name
                 it[description] = homeDto.description
-                it[image] = StringConvertor.joinToString(homeDto.images)
+                it[image] = StringConvertor.joinToString(cleanedImages)
                 it[address] = homeDto.address
                 it[latitude] = homeDto.latitude?.toBigDecimal()
                 it[longitude] = homeDto.longitude?.toBigDecimal()
                 it[yearBuilt] = homeDto.yearBuilt
                 it[history] = StringConvertor.joinToString(homeDto.history)
-                it[historyImages] = StringConvertor.joinToString(homeDto.historyImages)
+                it[historyImages] = StringConvertor.joinToString(cleanedHistoryImages)
                 it[features] = StringConvertor.joinToString(homeDto.features)
                 it[about] = homeDto.about
                 it[numberOfFloors] = homeDto.numberOfFloors
@@ -65,9 +73,9 @@ object HomeRepository {
                 it[schoolsNearby] = homeDto.schoolsNearby
                 it[hospitalsNearby] = homeDto.hospitalsNearby
                 it[hasYards] = homeDto.hasYards
-                it[yardsImages] = StringConvertor.joinToString(homeDto.yardsImages)
+                it[yardsImages] = StringConvertor.joinToString(cleanedYardsImages)
                 it[published] = homeDto.published
-                it[model3D] = homeDto.model3D
+                it[model3D] = cleanedModel3D
             }
         }
     }
@@ -100,4 +108,7 @@ object HomeRepository {
         published = this[Homes.published],
         model3D = this[Homes.model3D],
     )
+
+    private fun cleanPath(path: String): String =
+        if (path.startsWith("/")) path.removePrefix("/") else path
 }

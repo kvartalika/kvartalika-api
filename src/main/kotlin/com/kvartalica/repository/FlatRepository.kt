@@ -45,52 +45,85 @@ object FlatRepository {
         }
     }
 
-    fun create(flatDto: FlatDto) {
+    fun create(flatDto: FlatCategoryDto) {
+        val flat = flatDto.flat
+        val categories = flatDto.categories
+        val cleanedImages = flat.images?.map { image ->
+            if (image.startsWith("/")) image.removePrefix("/") else image
+        }
+
+        val cleanedLayout = if (flat.layout?.startsWith("/") == true) {
+            flat.layout.removePrefix("/")
+        } else {
+            flat.layout
+        }
         transaction {
-            Flats.insert {
-                it[name] = flatDto.name
-                it[description] = flatDto.description
-                it[images] = StringConvertor.joinToString(flatDto.images)
-                it[layout] = flatDto.layout
-                it[address] = flatDto.address
-                it[price] = flatDto.price
-                it[latitude] = flatDto.latitude?.toBigDecimal()
-                it[longitude] = flatDto.longitude?.toBigDecimal()
-                it[features] = StringConvertor.joinToString(flatDto.features)
-                it[numberOfRooms] = flatDto.numberOfRooms
-                it[area] = flatDto.area?.toBigDecimal()
-                it[about] = flatDto.about
-                it[floor] = flatDto.floor
-                it[homeId] = flatDto.homeId
-                it[numberOfBathrooms] = flatDto.numberOfBathrooms
-                it[hasDecoration] = flatDto.hasDecoration ?: false
-                it[numberForSale] = flatDto.numberForSale
-                it[published] = flatDto.published
+            val insertedId = Flats.insertAndGetId {
+                it[name] = flat.name
+                it[description] = flat.description
+                it[images] = StringConvertor.joinToString(cleanedImages)
+                it[layout] = cleanedLayout
+                it[address] = flat.address
+                it[price] = flat.price
+                it[latitude] = flat.latitude?.toBigDecimal()
+                it[longitude] = flat.longitude?.toBigDecimal()
+                it[features] = StringConvertor.joinToString(flat.features)
+                it[numberOfRooms] = flat.numberOfRooms
+                it[area] = flat.area?.toBigDecimal()
+                it[about] = flat.about
+                it[floor] = flat.floor
+                it[homeId] = flat.homeId
+                it[numberForSale] = flat.numberForSale
+                it[numberOfBathrooms] = flat.numberOfBathrooms
+                it[hasDecoration] = flat.hasDecoration
+                it[published] = flat.published
+            }.value
+
+            categories.forEach { category ->
+                CategoriesRepository.addCategoryToFlat(insertedId, category.id)
             }
         }
     }
 
-    fun update(id: Int, flatDto: FlatDto) {
+    fun update(id: Int, flatDto: FlatCategoryDto) {
+        val flat = flatDto.flat
+        val categories = flatDto.categories
+
+        val cleanedImages = flat.images?.map { image ->
+            if (image.startsWith("/")) image.removePrefix("/") else image
+        }
+
+        val cleanedLayout = if (flat.layout?.startsWith("/") == true) {
+            flat.layout.removePrefix("/")
+        } else {
+            flat.layout
+        }
+
         transaction {
             Flats.update({ Flats.id eq id }) {
-                it[name] = flatDto.name
-                it[description] = flatDto.description
-                it[images] = StringConvertor.joinToString(flatDto.images)
-                it[layout] = flatDto.layout
-                it[address] = flatDto.address
-                it[price] = flatDto.price
-                it[latitude] = flatDto.latitude?.toBigDecimal()
-                it[longitude] = flatDto.longitude?.toBigDecimal()
-                it[features] = StringConvertor.joinToString(flatDto.features)
-                it[numberOfRooms] = flatDto.numberOfRooms
-                it[area] = flatDto.area?.toBigDecimal()
-                it[about] = flatDto.about
-                it[floor] = flatDto.floor
-                it[homeId] = flatDto.homeId
-                it[numberOfBathrooms] = flatDto.numberOfBathrooms
-                it[hasDecoration] = flatDto.hasDecoration ?: false
-                it[numberForSale] = flatDto.numberForSale
-                it[published] = flatDto.published
+                it[name] = flat.name
+                it[description] = flat.description
+                it[images] = StringConvertor.joinToString(cleanedImages)
+                it[layout] = cleanedLayout
+                it[address] = flat.address
+                it[price] = flat.price
+                it[latitude] = flat.latitude?.toBigDecimal()
+                it[longitude] = flat.longitude?.toBigDecimal()
+                it[features] = StringConvertor.joinToString(flat.features)
+                it[numberOfRooms] = flat.numberOfRooms
+                it[area] = flat.area?.toBigDecimal()
+                it[about] = flat.about
+                it[floor] = flat.floor
+                it[homeId] = flat.homeId
+                it[numberForSale] = flat.numberForSale
+                it[numberOfBathrooms] = flat.numberOfBathrooms
+                it[hasDecoration] = flat.hasDecoration
+                it[published] = flat.published
+            }
+
+            FlatCategories.deleteWhere { FlatCategories.flat eq id }
+            categories.forEach { c ->
+                CategoriesRepository.addCategoryToFlat(id, c.id)
             }
         }
     }
