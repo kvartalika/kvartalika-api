@@ -10,11 +10,6 @@ plugins {
 
 }
 
-kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(19))
-    }
-}
 
 group = "com.kvartalica"
 version = "0.0.1"

@@ -11,11 +11,8 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 import org.mindrot.jbcrypt.BCrypt
 import java.util.*
 
@@ -23,10 +20,12 @@ fun Route.adminRoutes() {
     post("/admin/login") {
         val request = call.receive<LoginRequest>()
         val admin = transaction {
-            Users.selectAll()
-                .where { (Users.email eq request.email) and (Users.role eq UserRole.ADMIN.name) }
-                .singleOrNull()
+            Users.select {
+                (Users.email eq request.email) and
+                        (Users.role eq UserRole.ADMIN.name)
+            }.singleOrNull()
         }
+
         if (admin != null && BCrypt.checkpw(request.password, admin[Users.password])) {
             val accessToken = JwtConfig.generateAccessToken(
                 userId = admin[Users.id].toString(),
@@ -36,11 +35,22 @@ fun Route.adminRoutes() {
             val refreshToken = JwtConfig.generateRefreshToken(
                 userId = admin[Users.id].toString()
             )
+
+            call.response.cookies.append(
+                Cookie(
+                    name = "refreshToken",
+                    value = refreshToken,
+                    maxAge = 60 * 60 * 24 * 30,
+                    path = "/",
+                    httpOnly = true,
+                    secure = false,
+//                    extensions = mapOf("SameSite" to "None")
+                )
+            )
             call.respond(
                 mapOf(
                     "accessToken" to accessToken,
-                    "refreshToken" to refreshToken,
-                    "role" to admin[Users.role]
+                    "role" to UserRole.ADMIN.name
                 )
             )
         } else {
