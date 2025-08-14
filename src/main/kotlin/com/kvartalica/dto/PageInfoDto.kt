@@ -11,4 +11,5 @@ data class PageInfoDto(
     val address: String? = null,
     val description: String? = null,
     val published: Boolean = false,
+    val privacy: String? = null,
 )

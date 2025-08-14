@@ -10,7 +10,7 @@ import io.ktor.server.routing.*
 import java.io.File
 
 fun Route.filesRoutes() {
-    authenticate("admin-jwt") {
+    authenticate("admin-jwt", "content-jwt") {
         route("/directories") {
             get {
                 call.respond(mapOf("directories" to FilesRepository.listDirectories()))
@@ -58,7 +58,7 @@ fun Route.filesRoutes() {
             val dir = call.parameters.getAll("dir")!!.joinToString(File.separator)
             call.respond(mapOf("files" to FilesRepository.listFiles(dir)))
         }
-        authenticate("admin-jwt") {
+        authenticate("admin-jwt", "content-jwt") {
             post("/upload/{dir...}") {
                 val dir = call.parameters.getAll("dir")!!.joinToString(File.separator)
                 val multipart = call.receiveMultipart()

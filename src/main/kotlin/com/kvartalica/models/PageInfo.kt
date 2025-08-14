@@ -10,4 +10,5 @@ object PageInfo : IntIdTable() {
     val address = text("address").nullable()
     val description = text("description").nullable()
     val published = bool("published").default(false)
+    val privacy = text("privacy").nullable()
 }

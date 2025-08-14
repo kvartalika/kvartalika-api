@@ -23,6 +23,7 @@ object PageRepository {
                         address = row[PageInfo.address],
                         description = row[PageInfo.description],
                         published = row[PageInfo.published],
+                        privacy = row[PageInfo.privacy],
                     )
                 }.firstOrNull()
         }
@@ -38,6 +39,7 @@ object PageRepository {
                 it[address] = null
                 it[description] = null
                 it[published] = false
+                it[privacy] = null
             }
             PageInfo
                 .selectAll()
@@ -51,6 +53,7 @@ object PageRepository {
                         address = row[PageInfo.address],
                         description = row[PageInfo.description],
                         published = row[PageInfo.published],
+                        privacy = row[PageInfo.privacy],
                     )
                 }.first()
         }
@@ -80,6 +83,7 @@ object PageRepository {
                     it[address] = pageInfoDto.address
                     it[description] = pageInfoDto.description
                     it[published] = pageInfoDto.published
+                    it[privacy] = pageInfoDto.privacy
                 }
             }
         }

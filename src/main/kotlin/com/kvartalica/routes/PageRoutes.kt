@@ -32,6 +32,7 @@ fun Route.pageRoutes() {
         put("/page_info") {
             try {
                 val pageInfo = call.receive<PageInfoDto>()
+                println(pageInfo)
                 PageRepository.updatePageInfo(pageInfo)
                 call.respond(HttpStatusCode.OK, "PageInfo updated successfully")
             } catch (e: Exception) {
