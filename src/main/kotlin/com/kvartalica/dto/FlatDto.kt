@@ -7,7 +7,7 @@ data class FlatDto(
     val id: Int = 0,
     val name: String? = null,
     val description: String? = null,
-    val images: List<String>? = null,
+    val images: List<String>? = null, // С отделкой
     val layout: String? = null,
     val address: String? = null,
     val price: Long? = null,
@@ -23,4 +23,5 @@ data class FlatDto(
     val hasDecoration: Boolean = false,
     val numberForSale: Int? = null,
     val published: Boolean = false,
+    val imagesClean: List<String>? = null,
 )

@@ -21,4 +21,5 @@ object Flats : IntIdTable() {
     val hasDecoration = bool("hasDecoration").default(false)
     val numberForSale = integer("numberForSale").nullable()
     val published = bool("published").default(false)
+    val imagesClean = text("imagesClean").nullable()
 }
