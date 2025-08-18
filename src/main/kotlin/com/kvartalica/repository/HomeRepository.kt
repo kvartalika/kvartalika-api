@@ -14,6 +14,7 @@ object HomeRepository {
             val cleanedHistoryImages = homeDto.historyImages?.map(::cleanPath)
             val cleanedYardsImages = homeDto.yardsImages?.map(::cleanPath)
             val cleanedModel3D = homeDto.model3D?.let(::cleanPath)
+            val cleanedPan = homeDto.pan?.let(::cleanPath)
             Homes.insert {
                 it[name] = homeDto.name
                 it[description] = homeDto.description
@@ -34,6 +35,7 @@ object HomeRepository {
                 it[yardsImages] = StringConvertor.joinToString(cleanedYardsImages)
                 it[published] = homeDto.published
                 it[model3D] = cleanedModel3D
+                it[pan] = cleanedPan
             }
         }
     }
@@ -56,6 +58,7 @@ object HomeRepository {
             val cleanedHistoryImages = homeDto.historyImages?.map(::cleanPath)
             val cleanedYardsImages = homeDto.yardsImages?.map(::cleanPath)
             val cleanedModel3D = homeDto.model3D?.let(::cleanPath)
+            val cleanedPan = homeDto.pan?.let(::cleanPath)
             Homes.update({ Homes.id eq id }) {
                 it[name] = homeDto.name
                 it[description] = homeDto.description
@@ -76,6 +79,7 @@ object HomeRepository {
                 it[yardsImages] = StringConvertor.joinToString(cleanedYardsImages)
                 it[published] = homeDto.published
                 it[model3D] = cleanedModel3D
+                it[pan] = cleanedPan
             }
         }
     }
@@ -107,6 +111,7 @@ object HomeRepository {
         yardsImages = StringConvertor.parseString(this[Homes.yardsImages]),
         published = this[Homes.published],
         model3D = this[Homes.model3D],
+        pan = this[Homes.pan],
     )
 
     private fun cleanPath(path: String): String =

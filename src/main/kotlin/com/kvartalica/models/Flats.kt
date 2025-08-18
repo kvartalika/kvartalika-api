@@ -22,4 +22,5 @@ object Flats : IntIdTable() {
     val numberForSale = integer("numberForSale").nullable()
     val published = bool("published").default(false)
     val imagesClean = text("imagesclean").nullable()
+    val pan = varchar("pan", 512).nullable()
 }

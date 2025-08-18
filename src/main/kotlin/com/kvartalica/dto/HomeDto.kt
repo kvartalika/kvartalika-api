@@ -24,4 +24,5 @@ data class HomeDto(
     val yardsImages: List<String>? = null,
     val published: Boolean = false,
     val model3D: String? = null,
+    val pan: String? = null,
 )

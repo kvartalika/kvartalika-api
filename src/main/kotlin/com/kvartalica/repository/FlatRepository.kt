@@ -78,6 +78,7 @@ object FlatRepository {
                 it[hasDecoration] = flat.hasDecoration
                 it[published] = flat.published
                 it[imagesClean] = StringConvertor.joinToString(flat.imagesClean)
+                it[pan] = flat.pan
             }.value
 
             categories.forEach { category ->
@@ -121,6 +122,7 @@ object FlatRepository {
                 it[hasDecoration] = flat.hasDecoration
                 it[published] = flat.published
                 it[imagesClean] = StringConvertor.joinToString(flat.imagesClean)
+                it[pan] = flat.pan
             }
 
             FlatCategories.deleteWhere { FlatCategories.flat eq id }
@@ -245,6 +247,7 @@ object FlatRepository {
         numberForSale = this[Flats.numberForSale],
         published = this[Flats.published],
         imagesClean = StringConvertor.parseString(this[Flats.imagesClean]),
+        pan = this[Flats.pan],
     )
 
     private fun ResultRow.toCategoryDto() = CategoryDto(

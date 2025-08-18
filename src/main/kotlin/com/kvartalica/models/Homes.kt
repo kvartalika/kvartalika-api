@@ -22,4 +22,5 @@ object Homes : IntIdTable() {
     val yardsImages = text("yardsImages").nullable()
     val published = bool("published").default(false)
     val model3D = varchar("model3d", 512).nullable()
+    val pan = varchar("pan", 512).nullable()
 }

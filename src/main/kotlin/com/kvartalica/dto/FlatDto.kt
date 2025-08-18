@@ -24,4 +24,5 @@ data class FlatDto(
     val numberForSale: Int? = null,
     val published: Boolean = false,
     val imagesClean: List<String>? = null,
+    val pan: String? = null,
 )
